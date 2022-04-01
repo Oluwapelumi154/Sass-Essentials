@@ -1,0 +1,159 @@
+@use "sass:map";
+
+// Using Variables
+
+// $bg-red equals  $bg_red
+//$bg-red : red!global  takes precedence over the property value assigned to the property name globally
+
+$bg-dark: #000;
+
+//Partials
+
+//partials file name start with an _ , it can be imported into other scss files using @use "filename excluding underscore"
+//the property in the partial file can be accessed using the filename.$propertyname
+@use "variable" as var;
+@use "base";
+html {
+  font-size: 62.5%;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var.$bg-white;
+  box-sizing: border-box;
+  border: 1px solid rgb(71, 211, 36);
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+//SASS mixing
+
+// mixin can be created using @mixin
+@mixin color($col: var.$bg-red) {
+  background-color: $col;
+}
+
+// SASS Nesting
+// A class property style can be updated using @extend keyword
+// .btn {
+//   background-color: var.$bg-lemon;
+//   border: 0;
+//   padding: var.$padding-x var.$padding-y;
+//   &:hover {
+//     @include color;
+//   }
+//   &-primary {
+//     @extend .btn;
+//   }
+//   .container & {
+//     border: 2px solid red;
+//     text-align: right;
+//   }
+// }
+
+// Exercise styles
+
+@mixin card($bg) {
+  background-color: $bg;
+  color: var.$bg-light;
+}
+
+@mixin cardhover($bg) {
+  background-color: $bg;
+  cursor: pointer;
+}
+.cont {
+  width: 50%;
+  min-height: 100vh;
+}
+.card {
+  border: 3px solid rgb(8, 36, 88);
+  padding: 1.7rem 1.5rem;
+  margin: 2rem 0 2rem 0;
+  &-primary {
+    @include card(var.$bg-dark);
+  }
+  &-primary:hover {
+    @include cardhover(var.$bg-blue);
+  }
+  &-dark {
+    @include card(var.$bg-lemon);
+  }
+  &-dark:hover {
+    @include cardhover(rgb(0, 204, 255));
+  }
+  p {
+    line-height: var.$line-height;
+    font-size: var.$p-font-size;
+    font-weight: var.$font-weight-light;
+  }
+  &-header {
+    font-size: var.$header-font-size;
+    margin: 0;
+  }
+}
+$color: red;
+/* Interpolation #{$color}*/
+@mixin btn($name: "", $bg: rgba(68, 68, 68, 0.267), $col: #fff) {
+  .btn#{$name} {
+    background-color: $bg;
+    color: $col;
+    border: none;
+    padding: 1rem 1.5rem;
+  }
+}
+// .buttons {
+//   @include btn("-warning", red);
+//   @include btn("-danger", purple);
+// }
+
+//EACH
+
+$buttons: "", -warning red white, -danger purple orange;
+@each $name, $bg, $color in $buttons {
+  @include btn($name, $bg, $color);
+}
+
+// list
+// List can be defined in scss using [],(), and also by assignng the values to the variable seperated by space
+$data: apple ball, cat;
+$data2: [a1 a2 a3];
+
+//list methods
+//Returns the length of the list
+$length: #{length($data)};
+
+//Returns the index of a value in the list : Note List in scss begins at index 1
+$nth: #{nth($data, 2)};
+
+//Updates the index of an item in the list
+$set-nth: #{set-nth($data, 2, ball)};
+
+//Returns the index of an item while providing the value in which index is to be returned
+$index: #{index($data, apple)};
+
+//Append item to the List
+$append: #{append($data, apple rice)};
+
+//Concatenate two list
+$join: #{join($data, $data2)};
+
+//FOR
+$array: (1, 2, 3);
+@for $i from 1 through length($array) {
+  h1#{$i} {
+    font-size: nth($array, 1);
+  }
+}
+
+//MAP
+$colorlist: (
+  "primary": RoyalBlue,
+  "red": red,
+);
+// map.get($colorlist.red);
